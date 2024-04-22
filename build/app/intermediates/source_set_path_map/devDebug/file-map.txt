@@ -1,0 +1,16 @@
+com.example.sales_app-debug-0 C:\D\Flutter\sales_app\android\app\src\debug\res
+com.example.sales_app-dev-1 C:\D\Flutter\sales_app\android\app\src\dev\res
+com.example.sales_app-devDebug-2 C:\D\Flutter\sales_app\android\app\src\devDebug\res
+com.example.sales_app-main-3 C:\D\Flutter\sales_app\android\app\src\main\res
+com.example.sales_app-dev-4 C:\D\Flutter\sales_app\build\app\generated\res\pngs\dev\debug
+com.example.sales_app-dev-5 C:\D\Flutter\sales_app\build\app\generated\res\resValues\dev\debug
+com.example.sales_app-dev-6 C:\D\Flutter\sales_app\build\app\generated\res\rs\dev\debug
+com.example.sales_app-mergeDevDebugResources-7 C:\D\Flutter\sales_app\build\app\intermediates\incremental\devDebug\mergeDevDebugResources\merged.dir
+com.example.sales_app-mergeDevDebugResources-8 C:\D\Flutter\sales_app\build\app\intermediates\incremental\devDebug\mergeDevDebugResources\stripped.dir
+com.example.sales_app-merged_res-9 C:\D\Flutter\sales_app\build\app\intermediates\merged_res\devDebug
+com.example.sales_app-packaged_res-10 C:\D\Flutter\sales_app\build\connectivity_plus\intermediates\packaged_res\debug
+com.example.sales_app-packaged_res-11 C:\D\Flutter\sales_app\build\path_provider_android\intermediates\packaged_res\debug
+com.example.sales_app-jetified-annotation-experimental-1.1.0-12 C:\Users\91904\.gradle\caches\transforms-3\09db32a73384ac2dccccf916d7dc0262\transformed\jetified-annotation-experimental-1.1.0\res
+com.example.sales_app-core-1.6.0-13 C:\Users\91904\.gradle\caches\transforms-3\168e459aae59caaab0d2c703cf9d67ab\transformed\core-1.6.0\res
+com.example.sales_app-jetified-window-1.0.0-beta04-14 C:\Users\91904\.gradle\caches\transforms-3\29fe38a5fd6c3bf46cd8e59c2b63489e\transformed\jetified-window-1.0.0-beta04\res
+com.example.sales_app-jetified-window-java-1.0.0-beta04-15 C:\Users\91904\.gradle\caches\transforms-3\978180320ed1d29d66a82edc9d24751e\transformed\jetified-window-java-1.0.0-beta04\res
