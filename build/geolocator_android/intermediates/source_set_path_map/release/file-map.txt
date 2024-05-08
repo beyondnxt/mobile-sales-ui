@@ -1,0 +1,15 @@
+com.baseflow.geolocator.geolocator_android-pngs-0 /Users/Personal/lingam/build/geolocator_android/generated/res/pngs/release
+com.baseflow.geolocator.geolocator_android-resValues-1 /Users/Personal/lingam/build/geolocator_android/generated/res/resValues/release
+com.baseflow.geolocator.geolocator_android-rs-2 /Users/Personal/lingam/build/geolocator_android/generated/res/rs/release
+com.baseflow.geolocator.geolocator_android-mergeReleaseResources-3 /Users/Personal/lingam/build/geolocator_android/intermediates/incremental/release/mergeReleaseResources/merged.dir
+com.baseflow.geolocator.geolocator_android-mergeReleaseResources-4 /Users/Personal/lingam/build/geolocator_android/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+com.baseflow.geolocator.geolocator_android-merged_res-5 /Users/Personal/lingam/build/geolocator_android/intermediates/merged_res/release
+com.baseflow.geolocator.geolocator_android-jetified-window-1.0.0-beta04-6 /Users/tnbwork/.gradle/caches/transforms-3/032f4dff274e516110d9363a9793a3e3/transformed/jetified-window-1.0.0-beta04/res
+com.baseflow.geolocator.geolocator_android-jetified-window-java-1.0.0-beta04-7 /Users/tnbwork/.gradle/caches/transforms-3/142c24f2530665bb6deb4123ab140714/transformed/jetified-window-java-1.0.0-beta04/res
+com.baseflow.geolocator.geolocator_android-lifecycle-runtime-2.3.1-8 /Users/tnbwork/.gradle/caches/transforms-3/25a884faa36a531a9e5f369d596bbf88/transformed/lifecycle-runtime-2.3.1/res
+com.baseflow.geolocator.geolocator_android-jetified-play-services-base-18.1.0-9 /Users/tnbwork/.gradle/caches/transforms-3/4b9d22533576529904e76f8ef61c175c/transformed/jetified-play-services-base-18.1.0/res
+com.baseflow.geolocator.geolocator_android-core-1.9.0-10 /Users/tnbwork/.gradle/caches/transforms-3/75f115a0f1013408c24b813aa08b99f3/transformed/core-1.9.0/res
+com.baseflow.geolocator.geolocator_android-jetified-play-services-basement-18.1.0-11 /Users/tnbwork/.gradle/caches/transforms-3/95e76454cff392b3dff66e1259c7e57f/transformed/jetified-play-services-basement-18.1.0/res
+com.baseflow.geolocator.geolocator_android-jetified-annotation-experimental-1.3.0-12 /Users/tnbwork/.gradle/caches/transforms-3/ae329bc8a0eb87982c4fe41e3ec5da7f/transformed/jetified-annotation-experimental-1.3.0/res
+com.baseflow.geolocator.geolocator_android-main-13 /Users/tnbwork/.pub-cache/hosted/pub.dev/geolocator_android-4.5.5/android/src/main/res
+com.baseflow.geolocator.geolocator_android-release-14 /Users/tnbwork/.pub-cache/hosted/pub.dev/geolocator_android-4.5.5/android/src/release/res
