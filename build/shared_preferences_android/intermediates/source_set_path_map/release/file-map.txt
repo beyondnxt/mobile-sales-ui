@@ -1,0 +1,12 @@
+io.flutter.plugins.sharedpreferences.shared_preferences_android-pngs-0 /Users/Personal/lingam/build/shared_preferences_android/generated/res/pngs/release
+io.flutter.plugins.sharedpreferences.shared_preferences_android-resValues-1 /Users/Personal/lingam/build/shared_preferences_android/generated/res/resValues/release
+io.flutter.plugins.sharedpreferences.shared_preferences_android-rs-2 /Users/Personal/lingam/build/shared_preferences_android/generated/res/rs/release
+io.flutter.plugins.sharedpreferences.shared_preferences_android-mergeReleaseResources-3 /Users/Personal/lingam/build/shared_preferences_android/intermediates/incremental/release/mergeReleaseResources/merged.dir
+io.flutter.plugins.sharedpreferences.shared_preferences_android-mergeReleaseResources-4 /Users/Personal/lingam/build/shared_preferences_android/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+io.flutter.plugins.sharedpreferences.shared_preferences_android-merged_res-5 /Users/Personal/lingam/build/shared_preferences_android/intermediates/merged_res/release
+io.flutter.plugins.sharedpreferences.shared_preferences_android-jetified-window-1.0.0-beta04-6 /Users/tnbwork/.gradle/caches/transforms-3/032f4dff274e516110d9363a9793a3e3/transformed/jetified-window-1.0.0-beta04/res
+io.flutter.plugins.sharedpreferences.shared_preferences_android-jetified-window-java-1.0.0-beta04-7 /Users/tnbwork/.gradle/caches/transforms-3/142c24f2530665bb6deb4123ab140714/transformed/jetified-window-java-1.0.0-beta04/res
+io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.6.0-8 /Users/tnbwork/.gradle/caches/transforms-3/2579a7de00054bf46a8dbc332552f622/transformed/core-1.6.0/res
+io.flutter.plugins.sharedpreferences.shared_preferences_android-jetified-annotation-experimental-1.1.0-9 /Users/tnbwork/.gradle/caches/transforms-3/3f96ca76068ab400b494bc7d541ee256/transformed/jetified-annotation-experimental-1.1.0/res
+io.flutter.plugins.sharedpreferences.shared_preferences_android-main-10 /Users/tnbwork/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.2/android/src/main/res
+io.flutter.plugins.sharedpreferences.shared_preferences_android-release-11 /Users/tnbwork/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.2/android/src/release/res
