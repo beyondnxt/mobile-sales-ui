@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -70,9 +72,25 @@ class LoginProvider extends ChangeNotifier {
           msg: jsonData["message"] ?? "Something went wrong",
         );
       }
-    } catch (e) {
+    } on TimeoutException catch (_) {
       Fluttertoast.showToast(
-        msg: e.toString(),
+        msg: "Request timed out. Please check your internet connection and try again.",
+      );
+    } on http.ClientException catch (_) {
+      Fluttertoast.showToast(
+        msg: "Network error. Please check your internet connection.",
+      );
+    } on FormatException catch (_) {
+      Fluttertoast.showToast(
+        msg: "Data format error. Please try again later.",
+      );
+    } on HttpException catch (e) {
+      Fluttertoast.showToast(
+        msg: "An unexpected error occurred: ${e.message}",
+      );
+    } catch(e){
+       Fluttertoast.showToast(
+        msg: "An unexpected error occurred: ${e.toString()}",
       );
     } finally {
       isLoading = false;

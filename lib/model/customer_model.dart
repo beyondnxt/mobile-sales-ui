@@ -1,56 +1,80 @@
 class CustomerName {
   int? id;
   String? firstName;
-  String? lastName;
-  String? phoneNumber;
+  String? contactPerson;
+  String? address;
+  String? pinCode;
+  String? country;
+  String? state;
+  String? city;
+  String? area;
   String? email;
-  int? roleId;
-  String? roleName;
-  int? companyId;
-  String? companyName;
+  String? contactNo;
+  String? latitude;
+  String? longitude;
   String? createdOn;
-  bool? status;
+  int? createdBy;
+  String? updatedOn;
+
 
   CustomerName(
       {this.id,
       this.firstName,
-      this.lastName,
-      this.phoneNumber,
+      this.contactPerson,
+      this.address,
+      this.pinCode,
+      this.country,
+      this.state,
+      this.city,
+      this.area,
       this.email,
-      this.roleId,
-      this.roleName,
-      this.companyId,
-      this.companyName,
+      this.contactNo,
+      this.latitude,
+      this.longitude,
       this.createdOn,
-      this.status});
+      this.createdBy,
+      this.updatedOn,
+      });
 
   CustomerName.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    phoneNumber = json['phoneNumber'];
+    firstName = json['name'];
+    contactPerson = json['contactPerson'];
+    address = json['address'];
+    pinCode = json['pinCode'];
+    country = json['country'];
+    state = json['state'];
+    city = json['city'];
+    area = json['area'];
     email = json['email'];
-    roleId = json['roleId'];
-    roleName = json['roleName'];
-    companyId = json['companyId'];
-    companyName = json['companyName'];
+    contactNo = json['contactNo'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
     createdOn = json['createdOn'];
-    status = json['status'];
+    createdBy = json['createdBy'];
+    updatedOn = json['updatedOn'];
+
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = id;
-    data['firstName'] = firstName;
-    data['lastName'] = lastName;
-    data['phoneNumber'] = phoneNumber;
+    data['name'] = firstName;
+    data['contactPerson'] = contactPerson;
+    data['address'] = address;
+    data['pinCode'] = pinCode;
+    data['country'] = country;
+    data['state'] = state;
+    data['city'] = city;
+    data['area'] = area;
     data['email'] = email;
-    data['roleId'] = roleId;
-    data['roleName'] = roleName;
-    data['companyId'] = companyId;
-    data['companyName'] = companyName;
+    data['contactNo'] = contactNo;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
     data['createdOn'] = createdOn;
-    data['status'] = status;
+    data['createdBy'] = createdBy;
+    data['updatedOn'] = updatedOn;
+
     return data;
   }
 }

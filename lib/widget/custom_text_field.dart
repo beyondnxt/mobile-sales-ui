@@ -9,15 +9,24 @@ class CustomTextFormField extends StatefulWidget {
   final IconData? prefixIcon;
   final IconData? suffixIcons;
   final TextInputType textInputType;
+  final bool? readOnly;
+  final double? height;
+  final double? width;
+  final int? maxLine;
 
-  const CustomTextFormField(
-      {super.key,
-      required this.hintText,
-      required this.lableText,
-      required this.controller,
-      required this.prefixIcon,
-      required this.suffixIcons,
-      required this.textInputType});
+  const CustomTextFormField({
+    super.key,
+    required this.hintText,
+    required this.lableText,
+    required this.controller,
+    required this.prefixIcon,
+    required this.suffixIcons,
+    required this.textInputType,
+    this.height,
+    this.width,
+    this.maxLine,
+    this.readOnly,
+  });
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -53,14 +62,16 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: ScreenSize.screenSize!.height * 0.06,
+      height: widget.height ?? ScreenSize.screenSize!.height * 0.06,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: Colors.grey.shade200),
       child: TextFormField(
+        readOnly: widget.readOnly ?? false,
         style: const TextStyle(
           color: Colors.black,
         ),
         focusNode: _focusNode,
+        maxLines: widget.maxLine?? 1,
         controller: widget.controller,
         obscureText: _obscureText,
         obscuringCharacter: '*',
@@ -90,7 +101,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 : widget.controller.text.isNotEmpty
                     ? null
                     : widget.hintText,
-            contentPadding: EdgeInsets.all(0),
+            contentPadding: EdgeInsets.only(top: 8),
             border: InputBorder.none,
             errorBorder: InputBorder.none,
             enabledBorder: InputBorder.none,

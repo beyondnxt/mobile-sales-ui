@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lingam/const/app_sreen_size.dart';
 import 'package:lingam/const/colors.dart';
 import 'package:lingam/controller/task_provider.dart';
+import 'package:lingam/services/date_time_converter.dart';
+import 'package:lingam/view/taskScreen/task_details_screen.dart';
 import 'package:lingam/widget/loading_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -107,93 +109,175 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                         ),
                       )
                     : Flexible(
-  child: taskProvider.searchController.text.isNotEmpty &&
-          taskProvider.searchTaskData.isNotEmpty
-      ? ListView.separated(
-          itemCount: taskProvider.searchTaskData.length,
-          itemBuilder: (ctx, index) {
-            return ListTile(
-              title: Text(taskProvider.searchTaskData[index].userName ?? ""),
-              subtitle: Text(taskProvider.searchTaskData[index].description ?? ""),
-              trailing: GestureDetector(
-                onTap: () {
-                  // Handle call action here
-                },
-                child: Container(
-                  width: ScreenSize.screenSize!.width * 0.14,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.call,
-                        color: Theme.of(context).primaryColor,
+                        child: taskProvider.searchController.text.isNotEmpty &&
+                                taskProvider.searchTaskData.isNotEmpty
+                            ? ListView.separated(
+                              physics:
+                                  const AlwaysScrollableScrollPhysics(),
+                              itemCount: taskProvider.searchTaskData.length,
+                              itemBuilder: (ctx, index) {
+                                return ListTile(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                TaskDetailsScreen(
+                                                    id: taskProvider
+                                                        .searchTaskData[
+                                                            index]
+                                                        .id!)));
+                                  },
+                                  title: Text(
+                                      "Task ID - #${taskProvider.searchTaskData[index].id}"),
+                                  subtitle: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    children: [
+                                      Text("Status"),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        height:
+                                            ScreenSize.screenSize!.height *
+                                                0.035,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4, horizontal: 8),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: taskProvider
+                                                .getColorOfStatus(
+                                                    taskProvider
+                                                            .searchTaskData[
+                                                                index]
+                                                            .status ??
+                                                        "")),
+                                        child: Text(taskProvider
+                                                .searchTaskData[index]
+                                                .status ??
+                                            ""),
+                                      )
+                                    ],
+                                  ),
+                                  trailing: GestureDetector(
+                                    onTap: () {
+                                      // Handle call action here
+                                    },
+                                    child: Container(
+                                      child: Text(DateTimeConverter
+                                          .convertServerTimeToLocal(
+                                              taskProvider
+                                                  .searchTaskData[index]
+                                                  .createdOn
+                                                  .toString())),
+                                    ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (ctx, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Divider(
+                                    color: Colors.grey.shade300,
+                                    height: 10,
+                                  ),
+                                );
+                              },
+                            )
+                            : taskProvider.searchController.text.isNotEmpty &&
+                                    taskProvider.searchTaskData.isEmpty
+                                ? Center(
+                                    child: Text("No data found."),
+                                  )
+                                : RefreshIndicator(
+                                  onRefresh: ()async{
+                                    await taskProvider.getAllTaskApi();
+                                  },
+                                  child: ListView.separated(
+                                      itemCount: taskProvider.allTaskData.length,
+                                       physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                      itemBuilder: (ctx, index) {
+                                        return ListTile(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (ctx) =>
+                                                        TaskDetailsScreen(
+                                                            id: taskProvider
+                                                                .allTaskData[
+                                                                    index]
+                                                                .id!)));
+                                          },
+                                          title: Text(
+                                              "Task ID - #${taskProvider.allTaskData[index].id}"),
+                                          subtitle: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text("Status"),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Container(
+                                                height: ScreenSize
+                                                        .screenSize!.height *
+                                                    0.035,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 4,
+                                                        horizontal: 8),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(5),
+                                                    color: taskProvider
+                                                        .getColorOfStatus(
+                                                            taskProvider
+                                                                    .allTaskData[
+                                                                        index]
+                                                                    .status ??
+                                                                "")),
+                                                child: Text(taskProvider
+                                                        .allTaskData[index]
+                                                        .status ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
+                                          trailing: GestureDetector(
+                                            onTap: () {
+                                              // Handle call action here
+                                            },
+                                            child: Container(
+                                              child: Text(DateTimeConverter
+                                                  .convertServerTimeToLocal(
+                                                      taskProvider
+                                                          .allTaskData[index]
+                                                          .createdOn
+                                                          .toString())),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder: (ctx, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Divider(
+                                            color: Colors.grey.shade300,
+                                            height: 10,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                ),
                       ),
-                      Text(
-                        "Call",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (ctx, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                color: Colors.grey.shade300,
-                height: 10,
-              ),
-            );
-          },
-        )
-      :  taskProvider.searchController.text.isNotEmpty &&
-          taskProvider.searchTaskData.isEmpty? Center(child: Text("No data found."),):  ListView.separated(
-          itemCount: taskProvider.allTaskData.length,
-          itemBuilder: (ctx, index) {
-            return ListTile(
-              title: Text(taskProvider.allTaskData[index].userName ?? ""),
-              subtitle: Text(taskProvider.allTaskData[index].description ?? ""),
-              trailing: GestureDetector(
-                onTap: () {
-                  // Handle call action here
-                },
-                child: Container(
-                  width: ScreenSize.screenSize!.width * 0.14,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.call,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      Text(
-                        "Call",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (ctx, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                color: Colors.grey.shade300,
-                height: 10,
-              ),
-            );
-          },
-        ),
-),
-
           ],
         ),
       ),

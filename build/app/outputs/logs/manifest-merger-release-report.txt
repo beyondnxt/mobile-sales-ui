@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 application
-INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:4:5-34:19
+INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:5:5-35:19
 MERGED from [:geolocator_android] /Users/Personal/lingam/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-15:19
 MERGED from [:geolocator_android] /Users/Personal/lingam/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-15:19
 MERGED from [androidx.window:window:1.0.0-beta04] /Users/tnbwork/.gradle/caches/transforms-3/032f4dff274e516110d9363a9793a3e3/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:24:5-31:19
@@ -20,22 +20,23 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/tnbw
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.9.0] /Users/tnbwork/.gradle/caches/transforms-3/75f115a0f1013408c24b813aa08b99f3/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
 	android:label
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:5:9-31
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:6:9-31
 	android:icon
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:7:9-43
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:8:9-43
 	android:name
 		INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:6:9-42
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:7:9-42
 manifest
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
-INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
-INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
-INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
+INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
+INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
+INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
 MERGED from [:shared_preferences_android] /Users/Personal/lingam/build/shared_preferences_android/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [:geolocator_android] /Users/Personal/lingam/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-17:12
 MERGED from [:fluttertoast] /Users/Personal/lingam/build/fluttertoast/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.window:window-java:1.0.0-beta04] /Users/tnbwork/.gradle/caches/transforms-3/142c24f2530665bb6deb4123ab140714/transformed/jetified-window-java-1.0.0-beta04/AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.window:window:1.0.0-beta04] /Users/tnbwork/.gradle/caches/transforms-3/032f4dff274e516110d9363a9793a3e3/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.multidex:multidex:2.0.0] /Users/tnbwork/.gradle/caches/transforms-3/a64717665708ef767a53c64b62661b7d/transformed/multidex-2.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.android.gms:play-services-location:21.0.1] /Users/tnbwork/.gradle/caches/transforms-3/cd04b8935807fb0be903e5c24b602e73/transformed/jetified-play-services-location-21.0.1/AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.android.gms:play-services-base:18.1.0] /Users/tnbwork/.gradle/caches/transforms-3/4b9d22533576529904e76f8ef61c175c/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:16:1-24:12
 MERGED from [com.google.android.gms:play-services-tasks:18.0.2] /Users/tnbwork/.gradle/caches/transforms-3/5e7b2e909cd4efd7f77d6320e047e1b9/transformed/jetified-play-services-tasks-18.0.2/AndroidManifest.xml:2:1-6:12
@@ -55,43 +56,47 @@ MERGED from [androidx.tracing:tracing:1.0.0] /Users/tnbwork/.gradle/caches/trans
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/tnbwork/.gradle/caches/transforms-3/6668cc85eff5929d44d91f927ab7e655/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/tnbwork/.gradle/caches/transforms-3/e706f819c67a6a189962ffd22caace4e/transformed/core-runtime-2.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] /Users/tnbwork/.gradle/caches/transforms-3/dada71b7eb51c482d5f3b75ae6e629f5/transformed/lifecycle-viewmodel-2.1.0/AndroidManifest.xml:17:1-22:12
-INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
-INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
-INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
+INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
+INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
+INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
 	package
 		INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
 		INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
 	android:versionName
 		INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
 		INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
 	android:versionCode
 		INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-46:12
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
 		INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:11-69
+uses-permission#android.permission.INTERNET
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:2:1-62
+	android:name
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:2:18-60
 uses-permission#android.permission.ACCESS_FINE_LOCATION
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:2:1-75
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:3:1-75
 	android:name
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:2:18-72
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:3:18-72
 uses-permission#android.permission.ACCESS_COARSE_LOCATION
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:3:1-77
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:4:1-77
 	android:name
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:3:18-74
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:4:18-74
 queries
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:40:5-45:15
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:41:5-46:15
 intent#action:name:android.intent.action.PROCESS_TEXT+data:mimeType:text/plain
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:41:9-44:18
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:42:9-45:18
 action#android.intent.action.PROCESS_TEXT
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:42:13-72
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:43:13-72
 	android:name
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:42:21-70
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:43:21-70
 data
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:43:13-50
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:44:13-50
 	android:mimeType
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:43:19-48
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:44:19-48
 uses-sdk
 INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
@@ -106,6 +111,8 @@ MERGED from [androidx.window:window-java:1.0.0-beta04] /Users/tnbwork/.gradle/ca
 MERGED from [androidx.window:window-java:1.0.0-beta04] /Users/tnbwork/.gradle/caches/transforms-3/142c24f2530665bb6deb4123ab140714/transformed/jetified-window-java-1.0.0-beta04/AndroidManifest.xml:19:5-21:41
 MERGED from [androidx.window:window:1.0.0-beta04] /Users/tnbwork/.gradle/caches/transforms-3/032f4dff274e516110d9363a9793a3e3/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.window:window:1.0.0-beta04] /Users/tnbwork/.gradle/caches/transforms-3/032f4dff274e516110d9363a9793a3e3/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.multidex:multidex:2.0.0] /Users/tnbwork/.gradle/caches/transforms-3/a64717665708ef767a53c64b62661b7d/transformed/multidex-2.0.0/AndroidManifest.xml:20:5-43
+MERGED from [androidx.multidex:multidex:2.0.0] /Users/tnbwork/.gradle/caches/transforms-3/a64717665708ef767a53c64b62661b7d/transformed/multidex-2.0.0/AndroidManifest.xml:20:5-43
 MERGED from [com.google.android.gms:play-services-location:21.0.1] /Users/tnbwork/.gradle/caches/transforms-3/cd04b8935807fb0be903e5c24b602e73/transformed/jetified-play-services-location-21.0.1/AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.gms:play-services-location:21.0.1] /Users/tnbwork/.gradle/caches/transforms-3/cd04b8935807fb0be903e5c24b602e73/transformed/jetified-play-services-location-21.0.1/AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.gms:play-services-base:18.1.0] /Users/tnbwork/.gradle/caches/transforms-3/4b9d22533576529904e76f8ef61c175c/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:18:5-43
@@ -155,43 +162,43 @@ INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
 		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
 activity#com.example.lingam.MainActivity
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:8:9-28:20
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:9:9-29:20
 	android:launchMode
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:11:13-43
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:12:13-43
 	android:hardwareAccelerated
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:14:13-47
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:15:13-47
 	android:windowSoftInputMode
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:15:13-55
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:16:13-55
 	android:exported
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:10:13-36
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:11:13-36
 	android:configChanges
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:13:13-163
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:14:13-163
 	android:theme
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:12:13-47
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:13:13-47
 	android:name
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:9:13-41
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:10:13-41
 meta-data#io.flutter.embedding.android.NormalTheme
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:20:13-23:17
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:21:13-24:17
 	android:resource
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:22:15-52
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:23:15-52
 	android:name
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:21:15-70
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:22:15-70
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:24:13-27:29
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:25:13-28:29
 action#android.intent.action.MAIN
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:25:17-68
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:26:17-68
 	android:name
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:25:25-66
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:26:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:26:17-76
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:27:17-76
 	android:name
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:26:27-74
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:27:27-74
 meta-data#flutterEmbedding
-ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:31:9-33:33
+ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:32:9-34:33
 	android:value
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:33:13-30
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:34:13-30
 	android:name
-		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:32:13-44
+		ADDED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:33:13-44
 service#com.baseflow.geolocator.GeolocatorLocationService
 ADDED from [:geolocator_android] /Users/Personal/lingam/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:10:9-14:56
 	android:enabled

@@ -1,4 +1,7 @@
+import 'package:lingam/services/date_time_converter.dart';
+
 class AllTaskModel {
+  DateTimeConverter datetimeconverter = DateTimeConverter();
   int? id;
   String? taskType;
   int? customerId;
@@ -31,6 +34,7 @@ class AllTaskModel {
       this.userName});
 
   AllTaskModel.fromJson(Map<String, dynamic> json) {
+    print(json);
     id = json['id'];
     taskType = json['taskType'];
     customerId = json['customerId'];
@@ -42,20 +46,24 @@ class AllTaskModel {
     if (json['feedBack'] != null) {
       feedBack = <FeedBack>[];
       json['feedBack'].forEach((v) {
-        feedBack!.add( FeedBack.fromJson(v));
+        feedBack!.add(FeedBack.fromJson(v));
       });
     }
     location = json['location'];
-   followUpDate =json['followUpDate']==null?null: DateTime.parse(json['followUpDate']).toLocal();
-    createdOn =json['createdOn']==null?null: DateTime.parse(json['createdOn']).toLocal();
+    followUpDate = json['followUpDate'] == null
+        ? null
+        : DateTime.parse(json['followUpDate']).toLocal();
+    createdOn = json['createdOn'] == null
+        ? null
+        : DateTime.parse(json['createdOn']).toLocal();
     createdBy = json['createdBy'] != null
-        ?  CreatedBy.fromJson(json['createdBy'])
+        ? CreatedBy.fromJson(json['createdBy'])
         : null;
     userName = json['userName'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['taskType'] = taskType;
     data['customerId'] = customerId;
@@ -92,7 +100,7 @@ class FeedBack {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['feedback'] = feedback;
     data['createdDate'] = createdDate;
     data['createdBy'] = createdBy;
@@ -112,7 +120,7 @@ class CreatedBy {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['userId'] = userId;
     data['userName'] = userName;
     return data;
