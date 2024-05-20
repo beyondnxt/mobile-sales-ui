@@ -32,6 +32,7 @@ INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:
 INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
 INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml:1:1-47:12
 MERGED from [:shared_preferences_android] /Users/Personal/lingam/build/shared_preferences_android/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
+MERGED from [:permission_handler_android] /Users/Personal/lingam/build/permission_handler_android/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [:geolocator_android] /Users/Personal/lingam/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-17:12
 MERGED from [:fluttertoast] /Users/Personal/lingam/build/fluttertoast/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.window:window-java:1.0.0-beta04] /Users/tnbwork/.gradle/caches/transforms-3/142c24f2530665bb6deb4123ab140714/transformed/jetified-window-java-1.0.0-beta04/AndroidManifest.xml:17:1-23:12
@@ -103,6 +104,8 @@ INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
 INJECTED from /Users/Personal/lingam/android/app/src/main/AndroidManifest.xml
 MERGED from [:shared_preferences_android] /Users/Personal/lingam/build/shared_preferences_android/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:shared_preferences_android] /Users/Personal/lingam/build/shared_preferences_android/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:permission_handler_android] /Users/Personal/lingam/build/permission_handler_android/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:permission_handler_android] /Users/Personal/lingam/build/permission_handler_android/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:geolocator_android] /Users/Personal/lingam/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:geolocator_android] /Users/Personal/lingam/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:fluttertoast] /Users/Personal/lingam/build/fluttertoast/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41

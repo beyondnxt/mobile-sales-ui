@@ -20,7 +20,15 @@ class LoginProvider extends ChangeNotifier {
 
     if (RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       print("Success");
-      loginAuth(context, email, password);
+      if(password.isEmpty){
+        Fluttertoast.showToast(
+          msg: "Please enter a password",
+        );
+        return false;
+      }else{
+ loginAuth(context, email, password);
+      }
+
       return true;
     } else {
       print("Sushalt email->> $email");
@@ -57,12 +65,12 @@ class LoginProvider extends ChangeNotifier {
 
       if (response.statusCode == 201) {
         StoreLoginValue.storeLoginDetails(
-            email: email,
-            passworrd: password,
-            userId: jsonData["userId"].toString(),
-            userName: jsonData["userName"].toString()
-
-            );
+          email: email,
+          passworrd: password,
+          userId: jsonData["userId"].toString(),
+          userName: jsonData["userName"].toString(),
+          token: jsonData["token"].toString(),
+        );
         Fluttertoast.showToast(
           msg: "Login Successfully",
         );
@@ -74,7 +82,8 @@ class LoginProvider extends ChangeNotifier {
       }
     } on TimeoutException catch (_) {
       Fluttertoast.showToast(
-        msg: "Request timed out. Please check your internet connection and try again.",
+        msg:
+            "Request timed out. Please check your internet connection and try again.",
       );
     } on http.ClientException catch (_) {
       Fluttertoast.showToast(
@@ -88,8 +97,8 @@ class LoginProvider extends ChangeNotifier {
       Fluttertoast.showToast(
         msg: "An unexpected error occurred: ${e.message}",
       );
-    } catch(e){
-       Fluttertoast.showToast(
+    } catch (e) {
+      Fluttertoast.showToast(
         msg: "An unexpected error occurred: ${e.toString()}",
       );
     } finally {

@@ -17,6 +17,19 @@
       externalAnnotations="annotations.zip"
       proguardRules="proguard.txt"/>
   <library
+      name="/Users/Personal/lingam/android@@:permission_handler_android::release"
+      jars="/Users/Personal/lingam/build/permission_handler_android/.transforms/77fda73a42677b044873f6e723f696dc/transformed/out/jars/classes.jar:/Users/Personal/lingam/build/permission_handler_android/.transforms/77fda73a42677b044873f6e723f696dc/transformed/out/jars/libs/R.jar"
+      resolved="com.baseflow.permissionhandler:permission_handler_android:unspecified"
+      folder="/Users/Personal/lingam/build/permission_handler_android/.transforms/77fda73a42677b044873f6e723f696dc/transformed/out"
+      manifest="AndroidManifest.xml"
+      resFolder="res"
+      assetsFolder="assets"
+      lintJar="lint.jar"
+      publicResources="public.txt"
+      symbolFile="R.txt"
+      externalAnnotations="annotations.zip"
+      proguardRules="proguard.txt"/>
+  <library
       name="/Users/Personal/lingam/android@@:geolocator_android::release"
       jars="/Users/Personal/lingam/build/geolocator_android/.transforms/23d0486f1584728cc38b6c24aa9da868/transformed/out/jars/classes.jar:/Users/Personal/lingam/build/geolocator_android/.transforms/23d0486f1584728cc38b6c24aa9da868/transformed/out/jars/libs/R.jar"
       resolved="com.baseflow.geolocator:geolocator_android:unspecified"

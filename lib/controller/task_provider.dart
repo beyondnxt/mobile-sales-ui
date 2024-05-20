@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:lingam/const/api_url.dart';
 import 'package:lingam/model/customer_model.dart';
 import 'package:lingam/model/lead_type_model.dart';
@@ -14,6 +14,7 @@ import 'package:lingam/services/date_time_converter.dart';
 import 'package:lingam/services/location_services.dart';
 import 'package:lingam/services/store_login_value.dart';
 import 'package:lingam/view/homeScreen.dart';
+import 'package:lingam/view/loginScreen/login_screen.dart';
 
 class TaskProvider with ChangeNotifier {
   TextEditingController searchController = TextEditingController();
@@ -32,6 +33,7 @@ class TaskProvider with ChangeNotifier {
   List<AllTaskModel> allTaskData = [];
   List<AllTaskModel> searchTaskData = [];
   List<CustomerName> allCustomerName = [];
+  List<CustomerName> searchCustomerName = [];
 
   List<LeadtypeModel> allLeadTypeModel = [
     LeadtypeModel(id: "1", firstName: "Lead"),
@@ -47,24 +49,55 @@ class TaskProvider with ChangeNotifier {
     StatusTypeModel(id: "2", firstName: "Assigned"),
     StatusTypeModel(id: "3", firstName: "Completed"),
   ];
-
+  AllTaskModel? taskDetailData;
   String errorMessage = "";
   bool isLoading = false;
+  bool dropDownLoading = false;
+  int currentPage = 1;
+  bool isFetchingMore = false;
+  String selectedStatus = "assigned";
 
-  Future<dynamic> getAllTaskApi() async {
+  Future<dynamic> getAllTaskApi(
+      {required BuildContext context,
+      required int page,
+      required String status}) async {
     String message = "";
-    try {
+    print(page.toString() + "Page");
+    if (page == 1) {
       isLoading = true;
-      print("Getting all");
-      var response = await http.get(Uri.parse("${APIEndPoints.mainUrl}task"));
+    } else {
+      isFetchingMore = true;
+    }
+    notifyListeners();
+
+    try {
+      var userId = await StoreLoginValue.getUserID();
+      var token = await StoreLoginValue.getTokenId();
+      var headers = {
+        "userId": userId.toString(),
+        "Authorization": token.toString(),
+        "Content-Type": "application/json"
+      };
+
+      var response = await http.get(
+          Uri.parse(
+              "${APIEndPoints.mainUrl}task?page=${page.toString()}&limit=9&status=$status"),
+          headers: headers);
       var jsonData = json.decode(response.body);
       if (response.statusCode == 200) {
-        allTaskData = [];
         List<dynamic> dataList = jsonData["data"];
-        // print(jsonData["data"]);
-        allTaskData =
-            dataList.map((json) => AllTaskModel.fromJson(json)).toList();
-        print(allTaskData);
+        if (page == 1) {
+          allTaskData = [];
+          allTaskData =
+              dataList.map((json) => AllTaskModel.fromJson(json)).toList();
+        } else {
+          allTaskData.addAll(
+              dataList.map((json) => AllTaskModel.fromJson(json)).toList());
+        }
+      } else if (response.statusCode == 401) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+            (route) => false);
       } else {
         message = jsonData["message"];
       }
@@ -73,17 +106,66 @@ class TaskProvider with ChangeNotifier {
       print(e.toString());
     } finally {
       isLoading = false;
+      isFetchingMore = false;
       errorMessage = message;
       notifyListeners();
     }
   }
 
+  // Future<dynamic> getAllTaskApi(
+  //     {required BuildContext context, required String page,}) async {
+  //   String message = "";
+  //   isLoading = true;
+  //   try {
+  //     var userId = await StoreLoginValue.getUserID();
+  //     var token = await StoreLoginValue.getTokenId();
+  //     var headers = {
+  //       "userId": userId.toString(),
+  //       "Authorization": token.toString(),
+  //       "Content-Type": "application/json"
+  //     };
+
+  //     print("Getting all");
+  //     var response = await http.get(
+  //         Uri.parse("${APIEndPoints.mainUrl}task?page=$page&limit=10"),
+  //         headers: headers);
+  //     var jsonData = json.decode(response.body);
+  //     if (response.statusCode == 200) {
+  //       allTaskData = [];
+  //       List<dynamic> dataList = jsonData["data"];
+  //       // print(jsonData["data"]);
+  //       allTaskData =
+  //           dataList.map((json) => AllTaskModel.fromJson(json)).toList();
+  //       print(allTaskData);
+  //     } else if (response.statusCode == 401) {
+  //       Navigator.of(context).pushAndRemoveUntil(
+  //           MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+  //           (route) => false);
+  //     } else {
+  //       message = jsonData["message"];
+  //     }
+  //   } catch (e) {
+  //     message = e.toString();
+  //     print(e.toString());
+  //   } finally {
+  //     isLoading = false;
+  //     errorMessage = message;
+  //     notifyListeners();
+  //   }
+  // }
+
   Future<dynamic> getAllCustomer() async {
     try {
       isLoading = true;
-      var headers = {};
-      var response =
-          await http.get(Uri.parse("${APIEndPoints.mainUrl}customers"));
+      var userId = await StoreLoginValue.getUserID();
+      var token = await StoreLoginValue.getTokenId();
+      var headers = {
+        "userId": userId.toString(),
+        "Authorization": token.toString(),
+        "Content-Type": "application/json"
+      };
+      var response = await http
+          .get(Uri.parse("${APIEndPoints.mainUrl}customers"), headers: headers);
       print("${APIEndPoints.mainUrl}customers");
       var jsonData = json.decode(response.body);
       if (response.statusCode == 200) {
@@ -116,15 +198,17 @@ class TaskProvider with ChangeNotifier {
 
       num latitude = 0.0;
       num longitude = 0.0;
-      await locationServices.determinePosition().then((value) {
+      await locationServices.determinePosition(context).then((value) {
         print(value);
         latitude = value.latitude;
         longitude = value.longitude;
       });
       var userId = await StoreLoginValue.getUserID();
+      var token = await StoreLoginValue.getTokenId();
       var headers = {
-        'userId': userId.toString(),
-        'Content-Type': 'application/json'
+        "userId": userId.toString(),
+        "Authorization": token.toString(),
+        "Content-Type": "application/json"
       };
       var body = json.encode({
         "taskType": taskType ?? "",
@@ -146,8 +230,14 @@ class TaskProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         Fluttertoast.showToast(msg: "Task Created successfully");
         clearData();
-        await getAllTaskApi();
-        Navigator.of(context).pop();
+
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => const HomeScreen()),
+            (route) => false);
+      } else if (response.statusCode == 401) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => LoginScreen()),
+            (route) => false);
       } else {
         Fluttertoast.showToast(
             msg: jsonData["message"] ?? "Something went wrong");
@@ -174,9 +264,11 @@ class TaskProvider with ChangeNotifier {
       isLoading = true;
       notifyListeners();
       var userId = await StoreLoginValue.getUserID();
+      var token = await StoreLoginValue.getTokenId();
       var headers = {
-        'userId': userId.toString(),
-        'Content-Type': 'application/json'
+        "userId": userId.toString(),
+        "Authorization": token.toString(),
+        "Content-Type": "application/json"
       };
       var body = json.encode({
         "taskType": taskType ?? "",
@@ -201,9 +293,14 @@ class TaskProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "Task Updated successfully");
         clearData();
-        await getAllTaskApi();
+
+        // await getAllTaskApi(context: context, page: 1, status: "Assigned");
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (ctx) => const HomeScreen()),
+            (route) => false);
+      } else if (response.statusCode == 401) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => LoginScreen()),
             (route) => false);
       } else {
         Fluttertoast.showToast(
@@ -278,10 +375,110 @@ class TaskProvider with ChangeNotifier {
       assignToPersonController.clear();
       assignToPersonIDController.clear();
     }
-    notifyListeners();
+    // notifyListeners();
   }
 
   void showToast(String message) {
     Fluttertoast.showToast(msg: message);
   }
+
+  Future<dynamic> searchQueryApi(String query) async {
+    try {
+      dropDownLoading = true;
+      notifyListeners();
+      var userId = await StoreLoginValue.getUserID();
+      var token = await StoreLoginValue.getTokenId();
+      var headers = {
+        "userId": userId.toString(),
+        "Authorization": token.toString(),
+        "Content-Type": "application/json"
+      };
+
+      var response = await http.get(
+          Uri.parse("${APIEndPoints.mainUrl}customers?name=$query"),
+          headers: headers);
+      var jsonData = json.decode(response.body);
+      if (response.statusCode == 200) {
+        List<dynamic> dataList = jsonData["data"];
+        if (dataList.isEmpty) {
+        } else {
+          searchCustomerName = [];
+          print(jsonData["data"]);
+          searchCustomerName =
+              dataList.map((json) => CustomerName.fromJson(json)).toList();
+          print(allCustomerName);
+        }
+      } else {}
+    } catch (e) {
+    } finally {
+      dropDownLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<dynamic> getTaskDetailsApi() async {
+    String message;
+    try {
+      isLoading = true;
+      notifyListeners();
+      var userId = await StoreLoginValue.getUserID();
+      var token = await StoreLoginValue.getTokenId();
+      var headers = {
+        "userId": userId.toString(),
+        "Authorization": token.toString(),
+        "Content-Type": "application/json"
+      };
+
+      var response = await http.get(Uri.parse("${APIEndPoints.mainUrl}task/53"),
+          headers: headers);
+      var jsonData = json.decode(response.body);
+      print(jsonData);
+      if (response.statusCode == 200) {
+        taskDetailData = AllTaskModel.fromJson(jsonData);
+        notifyListeners();
+        return [200, ""];
+      } else {
+        message = jsonData["message"];
+        return [response.statusCode, message];
+      }
+    } on TimeoutException catch (_) {
+      Fluttertoast.showToast(
+        msg:
+            "Request timed out. Please check your internet connection and try again.",
+      );
+      message =
+          "Request timed out. Please check your internet connection and try again.";
+      return [400, message];
+    } on http.ClientException catch (_) {
+      Fluttertoast.showToast(
+        msg: "Network error. Please check your internet connection.",
+      );
+      message = "Network error. Please check your internet connection.";
+      return [400, message];
+    } on FormatException catch (_) {
+      Fluttertoast.showToast(
+        msg: "Data format error. Please try again later.",
+      );
+      message = "Data format error. Please try again later.";
+      return [400, message];
+    } on HttpException catch (e) {
+      Fluttertoast.showToast(
+        msg: "An unexpected error occurred: ${e.message}",
+      );
+      message = "An unexpected error occurred: ${e.message}";
+      return [400, message];
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "An unexpected error occurred: ${e.toString()}",
+      );
+      message = "An unexpected error occurred: ${e.toString()}";
+      return [400, message];
+    } finally {
+      isLoading = false;
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> addFeedBackApi() async {}
 }

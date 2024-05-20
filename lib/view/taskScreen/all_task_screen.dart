@@ -17,15 +17,46 @@ class MyTaskScreen extends StatefulWidget {
   State<MyTaskScreen> createState() => _MyTaskScreenState();
 }
 
-class _MyTaskScreenState extends State<MyTaskScreen> {
+class _MyTaskScreenState extends State<MyTaskScreen>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<TaskProvider>(context, listen: false).getAllTaskApi();
+      _scrollController = ScrollController();
+
+    Future.delayed(Duration(milliseconds: 500), () {
+       final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    taskProvider.getAllTaskApi(
+        context: context, page: 1, status: taskProvider.selectedStatus);
+ _scrollController.addListener(_onScroll);
+    });
   }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !taskProvider.isFetchingMore) {
+      taskProvider.currentPage++;
+      taskProvider.getAllTaskApi(
+          context: context,
+          page: taskProvider.currentPage,
+          status: taskProvider.selectedStatus);
+    }
+  }
+
+  List<String> status = ["assigned", "unassigned", "completed"];
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +64,7 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Theme.of(context).primaryColor,
+
       // appBar: AppBar(
       //   leading: Padding(
       //     padding: const EdgeInsets.all(15.0),
@@ -60,6 +92,33 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
         ),
         child: Column(
           children: [
+            Container(
+              margin: const EdgeInsets.all(3),
+              height: ScreenSize.screenSize!.height * 0.06,
+              child: Row(
+                  children: List.generate(status.length, (index) {
+                return Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      onTap: () {
+                        taskProvider.currentPage = 1;
+                        taskProvider.selectedStatus = status[index];
+                        taskProvider.getAllTaskApi(
+                            context: context, page: 1, status: status[index]);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: taskProvider.selectedStatus == status[index]
+                              ? Colors.blue[100]
+                              : Colors.white,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(status[index].toUpperCase()),
+                      ),
+                    ));
+              })),
+            ),
             Container(
               margin: const EdgeInsets.all(10),
               height: ScreenSize.screenSize!.height * 0.06,
@@ -100,7 +159,7 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                 },
               ),
             ),
-            taskProvider.isLoading
+            taskProvider.isLoading && taskProvider.currentPage == 1
                 ? const LoadingScreen()
                 : taskProvider.allTaskData.isEmpty
                     ? const Flexible(
@@ -112,96 +171,114 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                         child: taskProvider.searchController.text.isNotEmpty &&
                                 taskProvider.searchTaskData.isNotEmpty
                             ? ListView.separated(
-                              physics:
-                                  const AlwaysScrollableScrollPhysics(),
-                              itemCount: taskProvider.searchTaskData.length,
-                              itemBuilder: (ctx, index) {
-                                return ListTile(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (ctx) =>
-                                                TaskDetailsScreen(
-                                                    id: taskProvider
-                                                        .searchTaskData[
-                                                            index]
-                                                        .id!)));
-                                  },
-                                  title: Text(
-                                      "Task ID - #${taskProvider.searchTaskData[index].id}"),
-                                  subtitle: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                    children: [
-                                      Text("Status"),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        height:
-                                            ScreenSize.screenSize!.height *
-                                                0.035,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4, horizontal: 8),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: taskProvider
-                                                .getColorOfStatus(
-                                                    taskProvider
-                                                            .searchTaskData[
-                                                                index]
-                                                            .status ??
-                                                        "")),
-                                        child: Text(taskProvider
-                                                .searchTaskData[index]
-                                                .status ??
-                                            ""),
-                                      )
-                                    ],
-                                  ),
-                                  trailing: GestureDetector(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: taskProvider.searchTaskData.length,
+                                itemBuilder: (ctx, index) {
+                                  return ListTile(
                                     onTap: () {
-                                      // Handle call action here
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  TaskDetailsScreen(
+                                                      id: taskProvider
+                                                          .searchTaskData[index]
+                                                          .id!)));
                                     },
-                                    child: Container(
-                                      child: Text(DateTimeConverter
-                                          .convertServerTimeToLocal(
-                                              taskProvider
+                                    title: Text(
+                                        "Name - ${taskProvider.searchTaskData[index].userName}"),
+                                    subtitle: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text("Status"),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          height:
+                                              ScreenSize.screenSize!.height *
+                                                  0.035,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 8),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: taskProvider
+                                                  .getColorOfStatus(taskProvider
+                                                          .searchTaskData[index]
+                                                          .status ??
+                                                      "")),
+                                          child: Text(taskProvider
                                                   .searchTaskData[index]
-                                                  .createdOn
-                                                  .toString())),
+                                                  .status ??
+                                              ""),
+                                        )
+                                      ],
                                     ),
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (ctx, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Divider(
-                                    color: Colors.grey.shade300,
-                                    height: 10,
-                                  ),
-                                );
-                              },
-                            )
+                                    trailing: GestureDetector(
+                                      onTap: () {
+                                        // Handle call action here
+                                      },
+                                      child: Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(DateTimeConverter
+                                                .convertServerTimeToLocal(
+                                                    taskProvider
+                                                        .searchTaskData[index]
+                                                        .createdOn
+                                                        .toString())),
+                                            Text(
+                                                "Task ID - #${taskProvider.searchTaskData[index].id}")
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (ctx, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Divider(
+                                      color: Colors.grey.shade300,
+                                      height: 10,
+                                    ),
+                                  );
+                                },
+                              )
                             : taskProvider.searchController.text.isNotEmpty &&
                                     taskProvider.searchTaskData.isEmpty
                                 ? Center(
                                     child: Text("No data found."),
                                   )
                                 : RefreshIndicator(
-                                  onRefresh: ()async{
-                                    await taskProvider.getAllTaskApi();
-                                  },
-                                  child: ListView.separated(
-                                      itemCount: taskProvider.allTaskData.length,
-                                       physics:
-                                      const AlwaysScrollableScrollPhysics(),
+                                    onRefresh: () async {
+                                      await taskProvider.getAllTaskApi(
+                                          context: context,
+                                          page: 1,
+                                          status: "Assigned");
+                                    },
+                                    child: ListView.separated(
+                                      controller: _scrollController,
+                                      itemCount: taskProvider
+                                              .allTaskData.length +
+                                          (taskProvider.isFetchingMore ? 1 : 0),
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
                                       itemBuilder: (ctx, index) {
+                                        if (index ==
+                                            taskProvider.allTaskData.length) {
+                                          return const Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        }
                                         return ListTile(
                                           onTap: () {
                                             Navigator.of(context).push(
@@ -214,7 +291,7 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                                                                 .id!)));
                                           },
                                           title: Text(
-                                              "Task ID - #${taskProvider.allTaskData[index].id}"),
+                                              "Name - ${taskProvider.allTaskData[index].userName}"),
                                           subtitle: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
@@ -235,7 +312,8 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                                                         horizontal: 8),
                                                 decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.circular(5),
+                                                        BorderRadius.circular(
+                                                            5),
                                                     color: taskProvider
                                                         .getColorOfStatus(
                                                             taskProvider
@@ -255,12 +333,24 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                                               // Handle call action here
                                             },
                                             child: Container(
-                                              child: Text(DateTimeConverter
-                                                  .convertServerTimeToLocal(
-                                                      taskProvider
-                                                          .allTaskData[index]
-                                                          .createdOn
-                                                          .toString())),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Text(DateTimeConverter
+                                                      .convertServerTimeToLocal(
+                                                          taskProvider
+                                                              .allTaskData[
+                                                                  index]
+                                                              .createdOn
+                                                              .toString())),
+                                                  Text(
+                                                      "Task ID - #${taskProvider.allTaskData[index].id}")
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
@@ -276,7 +366,7 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                                         );
                                       },
                                     ),
-                                ),
+                                  ),
                       ),
           ],
         ),

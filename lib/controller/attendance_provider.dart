@@ -5,7 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:lingam/const/api_url.dart';
+import 'package:lingam/controller/login_provider.dart';
 import 'package:lingam/services/store_login_value.dart';
+import 'package:lingam/view/loginScreen/login_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../services/location_services.dart';
 
@@ -17,21 +20,26 @@ class AttendanceProvider with ChangeNotifier {
   String punchInTime = "";
   String puchOutTime = "";
   String dateTime = "";
-  Future<dynamic> checkInApi() async {
+  Future<dynamic> checkInApi(BuildContext context) async {
     try {
       isLoading = true;
       notifyListeners();
       num latitude = 0.0;
       num longitude = 0.0;
-      await locationServices.determinePosition().then((value) {
+      await locationServices.determinePosition(context).then((value) {
         print(value);
         latitude = value.latitude;
         longitude = value.longitude;
       });
+      if (latitude == 0.0 || longitude == 0.0) {
+        locationServices.showLocationPermissionDialog(context);
+        return;
+      }
       var userId = await StoreLoginValue.getUserID();
-
+      var token = await StoreLoginValue.getTokenId();
       var headers = {
         "userId": userId.toString(),
+        "Authorization": token.toString(),
         "Content-Type": "application/json"
       };
       var body = json.encode({"latitude": latitude, "longitude": longitude});
@@ -47,8 +55,17 @@ class AttendanceProvider with ChangeNotifier {
       print(jsonData);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "Punch In Success");
-        await getLastAttendanceApi();
-        await getAttendanceStatus();
+        await getLastAttendanceApi(context);
+        await getAttendanceStatus(context);
+      } else if (response.statusCode == 401) {
+        // var userName = await StoreLoginValue.getUserName();
+        // var password = await StoreLoginValue.getUserPassword();
+        // provider.loginAuth(context, userName!, password!).then((value) {
+        //   checkInApi(context);
+        // });
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+            (route) => false);
       } else {
         Fluttertoast.showToast(msg: jsonData["message"]);
       }
@@ -60,21 +77,22 @@ class AttendanceProvider with ChangeNotifier {
     }
   }
 
-  Future<dynamic> checkOutApi() async {
+  Future<dynamic> checkOutApi(BuildContext context) async {
     try {
       isLoading = true;
       notifyListeners();
       num latitude = 0.0;
       num longitude = 0.0;
-      await locationServices.determinePosition().then((value) {
+      await locationServices.determinePosition(context).then((value) {
         print(value);
         latitude = value.latitude;
         longitude = value.longitude;
       });
       var userId = await StoreLoginValue.getUserID();
-
+      var token = await StoreLoginValue.getTokenId();
       var headers = {
         "userId": userId.toString(),
+        "Authorization": token.toString(),
         "Content-Type": "application/json"
       };
 
@@ -90,10 +108,14 @@ class AttendanceProvider with ChangeNotifier {
       print("${APIEndPoints.mainUrl}attendance/updatePunchOut/$userId");
       print(jsonData);
       if (response.statusCode == 200) {
-         await getLastAttendanceApi();
-        await getAttendanceStatus();
+        await getLastAttendanceApi(context);
+        await getAttendanceStatus(context);
 
         Fluttertoast.showToast(msg: "Punch Out Success");
+      } else if (response.statusCode == 401) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+            (route) => false);
       } else {
         Fluttertoast.showToast(msg: jsonData["message"]);
       }
@@ -105,11 +127,14 @@ class AttendanceProvider with ChangeNotifier {
     }
   }
 
-  Future<dynamic> getLastAttendanceApi() async {
+  Future<dynamic> getLastAttendanceApi(BuildContext context) async {
     try {
-      String? userId = await StoreLoginValue.getUserID();
+      isLoading = true;
+      var userId = await StoreLoginValue.getUserID();
+      var token = await StoreLoginValue.getTokenId();
       var headers = {
         "userId": userId.toString(),
+        "Authorization": token.toString(),
         "Content-Type": "application/json"
       };
 
@@ -141,9 +166,16 @@ class AttendanceProvider with ChangeNotifier {
           notifyListeners();
         }
         print(response.body);
-      } else {}
+      } else if (response.statusCode == 401) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+            (route) => false);
+      } else {
+        Fluttertoast.showToast(msg: jsonData["message"]);
+      }
     } catch (e) {
     } finally {
+      isLoading = false;
       notifyListeners();
     }
   }
@@ -161,12 +193,15 @@ class AttendanceProvider with ChangeNotifier {
     return formattedTime;
   }
 
-  Future<dynamic> getAttendanceStatus() async {
+  Future<dynamic> getAttendanceStatus(BuildContext context) async {
     try {
+      isLoading = true;
       var userId = await StoreLoginValue.getUserID();
+      var token = await StoreLoginValue.getTokenId();
       var headers = {
         "userId": userId.toString(),
-         "Content-Type": "application/json"
+        "Authorization": token.toString(),
+        "Content-Type": "application/json"
       };
       print(headers);
       var response = await http.get(
@@ -181,12 +216,17 @@ class AttendanceProvider with ChangeNotifier {
           isCheckIn = false;
         } else if (jsonData['message'] == "punchOut") {
           isCheckIn = true;
-        }else{
- isCheckIn = null;
+        } else if (response.statusCode == 401) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+              (route) => false);
+        } else {
+          isCheckIn = null;
         }
       }
     } catch (e) {
     } finally {
+      isLoading = false;
       notifyListeners();
     }
   }

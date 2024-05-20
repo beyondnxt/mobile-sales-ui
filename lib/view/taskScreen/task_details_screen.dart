@@ -5,44 +5,65 @@ import 'package:lingam/controller/task_provider.dart';
 import 'package:lingam/view/taskScreen/add_task_screen.dart';
 import 'package:provider/provider.dart';
 
-class TaskDetailsScreen extends StatelessWidget {
+class TaskDetailsScreen extends StatefulWidget {
   final int id;
   const TaskDetailsScreen({super.key, required this.id});
 
   @override
+  State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
+}
+
+class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(milliseconds: 500), () {
+      Provider.of<TaskProvider>(context, listen: false).getTaskDetailsApi();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final taskProvider = Provider.of<TaskProvider>(context);
-    final detailTask = taskProvider.findById(id);
+    final detailTask = taskProvider.taskDetailData;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: AppBar(
+      appBar: taskProvider.isLoading ?AppBar(  leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),):  AppBar(
         centerTitle: true,
-        leading: detailTask.status == "Unassigned" ||
-                detailTask.status == "Assigned" ||
-                detailTask.status == "Visit"
-            ? IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ))
-            : Container(),
-        title: Text("Task - #${detailTask.id.toString()}"),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
+        title: Text("Task - #${widget.id.toString()}"),
         actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => AddTaskScreen(
-                          id: detailTask.id!,
-                          status: detailTask.status,
-                        )));
-              },
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-              ))
+        detailTask?.status == "Unassigned" ||
+                  detailTask?.status == "Assigned" ||
+                  detailTask?.status == "Visit"
+              ? taskProvider.isLoading ? Container() :IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (ctx) => AddTaskScreen(
+                              id: detailTask?.id!,
+                              status: detailTask?.status,
+                            )));
+                  },
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  )): Container(),
+
         ],
       ),
       body: SingleChildScrollView(
@@ -55,91 +76,106 @@ class TaskDetailsScreen extends StatelessWidget {
               top: Radius.circular(15),
             ),
           ),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.all(15),
-                child: Row(
-                  children: [
-                    titleAndSubtitle("Task Type", "${detailTask.taskType}"),
-                    titleAndSubtitle(
-                        "Customer Name", "${detailTask.customerName}"),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(15),
-                child: Row(
-                  children: [
-                    titleAndSubtitle(
-                        "Assign To ", "${detailTask.assignToName}"),
-                    Expanded(
-                        flex: 2,
-                        child: Container(
+          child: taskProvider.isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : taskProvider.taskDetailData == null
+                  ? Center(
+                      child: Text(taskProvider.errorMessage),
+                    )
+                  : Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(15),
+                          child: Row(
+                            children: [
+                              titleAndSubtitle(
+                                  "Task Type", "${detailTask!.taskType}"),
+                              titleAndSubtitle("Customer Name",
+                                  "${detailTask.customerName}"),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(15),
+                          child: Row(
+                            children: [
+                              titleAndSubtitle(
+                                  "Assign To ", "${detailTask.assignToName}"),
+                              Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Status"),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.orange.shade200,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 10),
+                                          child: Text("${detailTask.status}"),
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(15),
+                          width: ScreenSize.screenSize!.width,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Status"),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.orange.shade200,
-                                    borderRadius: BorderRadius.circular(10)),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 10),
-                                child: Text("${detailTask.status}"),
-                              )
+                              Text(
+                                "Description",
+                                style: TextStyle(
+                                    color: Colors.grey.shade600, fontSize: 20),
+                              ),
+                              Text(
+                                "${detailTask.description}",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 17),
+                              ),
                             ],
                           ),
-                        )),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(15),
-                width: ScreenSize.screenSize!.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Description",
-                      style:
-                          TextStyle(color: Colors.grey.shade600, fontSize: 20),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(15),
+                          width: ScreenSize.screenSize!.width,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Feedback",
+                                style: TextStyle(
+                                    color: Colors.grey.shade600, fontSize: 20),
+                              ),
+                              if (detailTask.feedBack != null)
+                                ...List.generate(
+                                    detailTask.feedBack!.length,
+                                    (index) => Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Text(
+                                            detailTask.feedBack![index]
+                                                    .feedback ??
+                                                "",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17),
+                                          ),
+                                        ))
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                    Text(
-                      "${detailTask.description}",
-                      style: TextStyle(color: Colors.black, fontSize: 17),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(15),
-                width: ScreenSize.screenSize!.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Feedback",
-                      style:
-                          TextStyle(color: Colors.grey.shade600, fontSize: 20),
-                    ),
-                    if (detailTask.feedBack != null)
-                      ...List.generate(
-                          detailTask.feedBack!.length,
-                          (index) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Text(
-                                  detailTask.feedBack![index].feedback ?? "",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 17),
-                                ),
-                              ))
-                  ],
-                ),
-              )
-            ],
-          ),
         ),
       ),
     );

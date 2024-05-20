@@ -4,6 +4,7 @@ import 'package:lingam/controller/attendance_provider.dart';
 import 'package:lingam/services/location_services.dart';
 import 'package:lingam/services/store_login_value.dart';
 import 'package:lingam/widget/custom_elevated_button.dart';
+import 'package:lingam/widget/loading_screen.dart';
 import 'package:provider/provider.dart';
 
 class AttendanceScreen extends StatefulWidget {
@@ -24,10 +25,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   String userName = "";
   Future<dynamic> onInitFun() async {
     Provider.of<AttendanceProvider>(context, listen: false)
-        .getAttendanceStatus();
+        .getAttendanceStatus(context);
     Provider.of<AttendanceProvider>(context, listen: false)
-        .getLastAttendanceApi();
-    LocationServices().determinePosition().then((val) {
+        .getLastAttendanceApi(context);
+    LocationServices().determinePosition(context).then((val) {
       LocationServices().getUserCurrentLOcation().then((value) {
         print(value);
         print("Hello hello");
@@ -51,7 +52,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             top: Radius.circular(15),
           ),
         ),
-        child: Padding(
+        child: provider.isLoading? LoadingScreen(): Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
@@ -188,12 +189,12 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               ),
               provider.isCheckIn == null
                   ?  const Text("Currently Punch In button Disabled")
-                  : CustomElevatedButton(
+                  :provider.isLoading== true ? Center(child: CircularProgressIndicator()) : CustomElevatedButton(
                       onTap: () {
                         if (provider.isCheckIn == false) {
-                          provider.checkInApi();
+                          provider.checkInApi(context);
                         } else if (provider.isCheckIn == true) {
-                          provider.checkOutApi();
+                          provider.checkOutApi(context);
                         }
                       },
                       title:

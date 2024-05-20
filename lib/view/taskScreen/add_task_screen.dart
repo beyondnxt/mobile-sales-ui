@@ -31,7 +31,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
     // TODO: implement initState
     super.initState();
     final provider = Provider.of<TaskProvider>(context, listen: false);
-    provider.getAllCustomer();
+    // provider.getAllCustomer();
     _controller = TabController(length: 2, vsync: this, initialIndex: 0);
      print("Scrolling started 1");
       if (widget.id != null) {

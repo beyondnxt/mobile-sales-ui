@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -6,7 +7,7 @@ class LocationServices {
   ///
   /// When the location services are not enabled or permissions
   /// are denied the `Future` will return an error.
-  Future<Position> determinePosition() async {
+  Future<Position> determinePosition(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -29,6 +30,7 @@ class LocationServices {
         // Android's shouldShowRequestPermissionRationale
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
+        showLocationPermissionDialog(context);
         Fluttertoast.showToast(msg: 'Location permissions are denied');
         return Future.error('Location permissions are denied');
       }
@@ -36,6 +38,7 @@ class LocationServices {
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
+        showLocationPermissionDialog(context);
       Fluttertoast.showToast(
           msg:
               "Location permissions are permanently denied, we cannot request permissions.");
@@ -52,5 +55,30 @@ class LocationServices {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     return position;
+  }
+
+  void showLocationPermissionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Location Permission'),
+          content: Text('Please enable location to check in or check out'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _openLocationSettings();
+              },
+              child: Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _openLocationSettings() async {
+    await Geolocator.openLocationSettings();
   }
 }
