@@ -21,17 +21,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getUserdetail();
+    // Any non-context dependent initialization can still be done here
+    getUserEmailAndName();
+     final provider = Provider.of<HomeScreenProvider>(context, listen: false);
+    provider.currentPage = 0; // Set provider value here
   }
 
-  Future<void> getUserdetail() async {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Access your provider or inherited widget here
+    print("kkkkkk");
+
+  }
+
+  Future<void> getUserEmailAndName() async {
     userEmail = await StoreLoginValue.getUserEmail() ?? "";
     userName = await StoreLoginValue.getUserName() ?? "";
-    setState(() {
-      
-    });
+    setState(() {}); // Make sure to update the state
     print("User name  $userName");
     print("User Email $userEmail");
   }

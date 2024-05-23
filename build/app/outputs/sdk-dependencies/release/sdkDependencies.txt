@@ -492,8 +492,20 @@ library {
   }
 }
 library {
+  maven_library {
+    groupId: "androidx.multidex"
+    artifactId: "multidex"
+    version: "2.0.0"
+  }
   digests {
-    sha256: "\037\227\222Qp\3516\031K\336\200&H\242\267\375\371nep\000}\266\341\033\021\357\361\027\370Y:"
+    sha256: "\300\027\000\t\020r\340\377]\216\302\320\016\254k\217\226\352\030d`\200B^\234\343\306\247\265\366n3"
+  }
+  repo_index {
+  }
+}
+library {
+  digests {
+    sha256: "\034\207\340(\337\033\027~\267 J\336\266\335\271M\240l\353\aw\322\251\306\344 %\3478\203\033\202"
   }
 }
 library_dependencies {
@@ -693,11 +705,12 @@ module_dependencies {
   dependency_index: 37
   dependency_index: 38
   dependency_index: 39
+  dependency_index: 40
   dependency_index: 0
   dependency_index: 33
   dependency_index: 8
   dependency_index: 30
-  dependency_index: 40
+  dependency_index: 41
 }
 repositories {
   maven_repo {
@@ -712,6 +725,16 @@ repositories {
 repositories {
   maven_repo {
     url: "https://storage.googleapis.com/download.flutter.io"
+  }
+}
+repositories {
+  maven_repo {
+    url: "https://dl.google.com/dl/android/maven2/"
+  }
+}
+repositories {
+  maven_repo {
+    url: "https://repo.maven.apache.org/maven2/"
   }
 }
 repositories {

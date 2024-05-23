@@ -1,4 +1,7 @@
+import 'package:lingam/services/date_time_converter.dart';
+
 class AllTaskModel {
+  DateTimeConverter datetimeconverter = DateTimeConverter();
   int? id;
   String? taskType;
   int? customerId;
@@ -31,31 +34,36 @@ class AllTaskModel {
       this.userName});
 
   AllTaskModel.fromJson(Map<String, dynamic> json) {
+    print(json);
     id = json['id'];
     taskType = json['taskType'];
     customerId = json['customerId'];
     customerName = json['customerName'];
     assignTo = json['assignTo'];
-    assignToName = json['assignToName'];
+    assignToName = json['assignToName']?? "";
     description = json['description'];
     status = json['status'];
     if (json['feedBack'] != null) {
       feedBack = <FeedBack>[];
       json['feedBack'].forEach((v) {
-        feedBack!.add( FeedBack.fromJson(v));
+        feedBack!.add(FeedBack.fromJson(v));
       });
     }
     location = json['location'];
-   followUpDate =json['followUpDate']==null?null: DateTime.parse(json['followUpDate']).toLocal();
-    createdOn =json['createdOn']==null?null: DateTime.parse(json['createdOn']).toLocal();
+    followUpDate = json['followUpDate'] == null
+        ? null
+        : DateTime.parse(json['followUpDate']).toLocal();
+    createdOn = json['createdOn'] == null
+        ? null
+        : DateTime.parse(json['createdOn']).toLocal();
     createdBy = json['createdBy'] != null
-        ?  CreatedBy.fromJson(json['createdBy'])
+        ? CreatedBy.fromJson(json['createdBy'])
         : null;
     userName = json['userName'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['taskType'] = taskType;
     data['customerId'] = customerId;
@@ -82,20 +90,24 @@ class FeedBack {
   String? feedback;
   String? createdDate;
   String? createdBy;
+  String? createdByName;
 
-  FeedBack({this.feedback, this.createdDate, this.createdBy});
+  FeedBack(
+      {this.feedback, this.createdDate, this.createdBy, this.createdByName});
 
   FeedBack.fromJson(Map<String, dynamic> json) {
     feedback = json['feedback'];
     createdDate = json['createdDate'];
     createdBy = json['createdBy'];
+    createdByName = json["createdByName"];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['feedback'] = feedback;
     data['createdDate'] = createdDate;
     data['createdBy'] = createdBy;
+    data["createdByName"] = createdByName;
     return data;
   }
 }
@@ -112,7 +124,7 @@ class CreatedBy {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['userId'] = userId;
     data['userName'] = userName;
     return data;

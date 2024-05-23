@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,11 +16,19 @@ class LoginProvider extends ChangeNotifier {
   bool isLoading = false;
 
   bool emailValidator(BuildContext context, String email, String password) {
-    // String email = emailtextEditingController.text.trim();
+    // String email = emailtextEditingController.textxtrim();
 
     if (RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       print("Success");
-      loginAuth(context, email, password);
+      if(password.isEmpty){
+        Fluttertoast.showToast(
+          msg: "Please enter a password",
+        );
+        return false;
+      }else{
+ loginAuth(context, email, password);
+      }
+
       return true;
     } else {
       print("Sushalt email->> $email");
@@ -55,24 +65,42 @@ class LoginProvider extends ChangeNotifier {
 
       if (response.statusCode == 201) {
         StoreLoginValue.storeLoginDetails(
-            email: email,
-            passworrd: password,
-            userId: jsonData["userId"].toString(),
-            userName: jsonData["userName"].toString()
-
-            );
+          email: email,
+          passworrd: password,
+          userId: jsonData["data"]["userId"].toString(),
+          userName: jsonData["data"]["userName"].toString(),
+          token: jsonData["data"]["token"].toString(),
+        );
         Fluttertoast.showToast(
           msg: "Login Successfully",
         );
         Navigator.of(context).pushNamed(HomeScreen.routeName);
+
       } else {
         Fluttertoast.showToast(
           msg: jsonData["message"] ?? "Something went wrong",
         );
       }
+    } on TimeoutException catch (_) {
+      Fluttertoast.showToast(
+        msg:
+            "Request timed out. Please check your internet connection and try again.",
+      );
+    } on http.ClientException catch (_) {
+      Fluttertoast.showToast(
+        msg: "Network error. Please check your internet connection.",
+      );
+    } on FormatException catch (_) {
+      Fluttertoast.showToast(
+        msg: "Data format error. Please try again later.",
+      );
+    } on HttpException catch (e) {
+      Fluttertoast.showToast(
+        msg: "An unexpected error occurred: ${e.message}",
+      );
     } catch (e) {
       Fluttertoast.showToast(
-        msg: e.toString(),
+        msg: "An unexpected error occurred: ${e.toString()}",
       );
     } finally {
       isLoading = false;

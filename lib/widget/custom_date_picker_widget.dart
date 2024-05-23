@@ -59,7 +59,7 @@ class _CustomDatePickerWidgetState extends State<CustomDatePickerWidget> {
                 context: context,
                 initialDate: _selectedDate ?? DateTime.now(),
                 firstDate: DateTime(1900),
-                lastDate: DateTime(2101),
+                lastDate: DateTime.now().add(const Duration(days: 365)),
               );
               if (pickedDate != null && pickedDate != _selectedDate) {
                 setState(() {
@@ -77,9 +77,10 @@ class _CustomDatePickerWidgetState extends State<CustomDatePickerWidget> {
             height: 20,
           ),
           labelText: _isFocused
-              ? "Date"
-              : _selectedDate == null
-                  ? "Select Date"
+              ? "Follow up Dates"
+              : _selectedDate == null &&
+                      provider.dateSelectController.text.isEmpty
+                  ? "Follow up Date"
                   : null,
           border: InputBorder.none,
           errorBorder: InputBorder.none,

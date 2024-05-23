@@ -12,7 +12,7 @@ class CustomRoutes {
       case MyTaskScreen.routeName:
         return MaterialPageRoute(builder: (_) => const MyTaskScreen());
       case AddTaskScreen.routeName:
-        return MaterialPageRoute(builder: (_) => const AddTaskScreen());
+        return MaterialPageRoute(builder: (_) => const AddTaskScreen(id: null,));
         case HomeScreen.routeName:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       default:

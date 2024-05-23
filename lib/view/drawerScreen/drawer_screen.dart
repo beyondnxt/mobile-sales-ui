@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:lingam/const/app_sreen_size.dart';
 import 'package:lingam/controller/homescreen_provider.dart';
+import 'package:lingam/view/loginScreen/login_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerScreen extends StatelessWidget {
   final String name;
   final String email;
-  const DrawerScreen({super.key,required this.email,required this.name});
+  const DrawerScreen({super.key, required this.email, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,24 @@ class DrawerScreen extends StatelessWidget {
               ),
               title: Text(
                 "Attendance",
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            ListTile(
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                prefs.clear();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (ctx) => LoginScreen()),
+                    (route) => false);
+              },
+              leading: Icon(
+                Icons.document_scanner_outlined,
+                color: Colors.white,
+              ),
+              title: Text(
+                "Log out",
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lingam/const/app_sreen_size.dart';
 import 'package:lingam/const/colors.dart';
 import 'package:lingam/controller/task_provider.dart';
+import 'package:lingam/services/date_time_converter.dart';
+import 'package:lingam/view/taskScreen/task_details_screen.dart';
 import 'package:lingam/widget/loading_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -15,15 +17,46 @@ class MyTaskScreen extends StatefulWidget {
   State<MyTaskScreen> createState() => _MyTaskScreenState();
 }
 
-class _MyTaskScreenState extends State<MyTaskScreen> {
+class _MyTaskScreenState extends State<MyTaskScreen>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<TaskProvider>(context, listen: false).getAllTaskApi();
+    _scrollController = ScrollController();
+
+    Future.delayed(Duration(milliseconds: 500), () {
+      final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+      taskProvider.getAllTaskApi(
+          context: context, page: 1, status: taskProvider.selectedStatus);
+      _scrollController.addListener(_onScroll);
+    });
   }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !taskProvider.isFetchingMore) {
+      taskProvider.currentPage++;
+      taskProvider.getAllTaskApi(
+          context: context,
+          page: taskProvider.currentPage,
+          status: taskProvider.selectedStatus);
+    }
+  }
+
+  List<String> status = ["assigned", "unassigned", "completed", "Visit"];
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +64,7 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Theme.of(context).primaryColor,
+
       // appBar: AppBar(
       //   leading: Padding(
       //     padding: const EdgeInsets.all(15.0),
@@ -58,6 +92,44 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
         ),
         child: Column(
           children: [
+            Container(
+              margin: const EdgeInsets.all(3),
+              height: ScreenSize.screenSize!.height * 0.06,
+              child: Row(
+                  children: List.generate(status.length, (index) {
+                return Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      onTap: () {
+                        taskProvider.currentPage = 1;
+                        taskProvider.selectedStatus = status[index];
+                        taskProvider.getAllTaskApi(
+                            context: context, page: 1, status: status[index]);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: taskProvider.selectedStatus == status[index]
+                              ? Colors.blue[100]
+                              : Colors.white,
+                        ),
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              status[index].toUpperCase(),
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            index == 0
+                                ? Text(taskProvider.totalCount.toString())
+                                : Container()
+                          ],
+                        ),
+                      ),
+                    ));
+              })),
+            ),
             Container(
               margin: const EdgeInsets.all(10),
               height: ScreenSize.screenSize!.height * 0.06,
@@ -92,13 +164,16 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                       ),
                     )),
                 onChanged: (val) {
-                  taskProvider.searchQuery(val);
+                  if (val.isEmpty) {
+                  } else {
+                    taskProvider.searchTaskQueryApi(val, taskProvider.selectedStatus);
+                  }
                   print(taskProvider.searchController.text.isNotEmpty);
                   print(taskProvider.searchTaskData);
                 },
               ),
             ),
-            taskProvider.isLoading
+            taskProvider.isLoading && taskProvider.currentPage == 1
                 ? const LoadingScreen()
                 : taskProvider.allTaskData.isEmpty
                     ? const Flexible(
@@ -107,93 +182,214 @@ class _MyTaskScreenState extends State<MyTaskScreen> {
                         ),
                       )
                     : Flexible(
-  child: taskProvider.searchController.text.isNotEmpty &&
-          taskProvider.searchTaskData.isNotEmpty
-      ? ListView.separated(
-          itemCount: taskProvider.searchTaskData.length,
-          itemBuilder: (ctx, index) {
-            return ListTile(
-              title: Text(taskProvider.searchTaskData[index].userName ?? ""),
-              subtitle: Text(taskProvider.searchTaskData[index].description ?? ""),
-              trailing: GestureDetector(
-                onTap: () {
-                  // Handle call action here
-                },
-                child: Container(
-                  width: ScreenSize.screenSize!.width * 0.14,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.call,
-                        color: Theme.of(context).primaryColor,
+                        child: taskProvider.searchController.text.isNotEmpty &&
+                                taskProvider.searchTaskData.isNotEmpty
+                            ? ListView.separated(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: taskProvider.searchTaskData.length,
+                                itemBuilder: (ctx, index) {
+                                  return ListTile(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  TaskDetailsScreen(
+                                                      id: taskProvider
+                                                          .searchTaskData[index]
+                                                          .id!)));
+                                    },
+                                    title: Text(
+                                        "Name - ${taskProvider.searchTaskData[index].customerName}"),
+                                    subtitle: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        if (taskProvider.selectedStatus !=
+                                            "Visit") ...{
+                                          Text("Type"),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Container(
+                                            height:
+                                                ScreenSize.screenSize!.height *
+                                                    0.035,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 4, horizontal: 8),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: taskProvider
+                                                    .getColorOfStatus(
+                                                        taskProvider
+                                                                .searchTaskData[
+                                                                    index]
+                                                                .status ??
+                                                            "")),
+                                            child: Text(taskProvider
+                                                    .searchTaskData[index]
+                                                    .taskType ??
+                                                ""),
+                                          )
+                                        }
+                                      ],
+                                    ),
+                                    trailing: GestureDetector(
+                                      onTap: () {
+                                        // Handle call action here
+                                      },
+                                      child: Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(DateTimeConverter
+                                                .convertServerTimeToLocal(
+                                                    taskProvider
+                                                        .searchTaskData[index]
+                                                        .createdOn
+                                                        .toString())),
+                                            Text(
+                                                "Task ID - #${taskProvider.searchTaskData[index].id}")
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (ctx, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Divider(
+                                      color: Colors.grey.shade300,
+                                      height: 10,
+                                    ),
+                                  );
+                                },
+                              )
+                            : taskProvider.searchController.text.isNotEmpty &&
+                                    taskProvider.searchTaskData.isEmpty
+                                ? Center(
+                                    child: Text("No data found."),
+                                  )
+                                : RefreshIndicator(
+                                    onRefresh: () async {
+                                      await taskProvider.getAllTaskApi(
+                                          context: context,
+                                          page: 1,
+                                          status: taskProvider.selectedStatus);
+                                    },
+                                    child: ListView.separated(
+                                      controller: _scrollController,
+                                      itemCount: taskProvider
+                                              .allTaskData.length +
+                                          (taskProvider.isFetchingMore ? 1 : 0),
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemBuilder: (ctx, index) {
+                                        if (index ==
+                                            taskProvider.allTaskData.length) {
+                                          return const Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        }
+                                        return ListTile(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (ctx) =>
+                                                        TaskDetailsScreen(
+                                                            id: taskProvider
+                                                                .allTaskData[
+                                                                    index]
+                                                                .id!)));
+                                          },
+                                          title: Text(
+                                              "Name - ${taskProvider.allTaskData[index].customerName}"),
+                                          subtitle: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              if (taskProvider.selectedStatus !=
+                                                  "Visit") ...{
+                                                Text("Type"),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Container(
+                                                  height: ScreenSize
+                                                          .screenSize!.height *
+                                                      0.035,
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 4,
+                                                      horizontal: 8),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: taskProvider
+                                                          .getColorOfStatus(
+                                                              taskProvider
+                                                                      .allTaskData[
+                                                                          index]
+                                                                      .status ??
+                                                                  "")),
+                                                  child: Text(taskProvider
+                                                          .allTaskData[index]
+                                                          .taskType ??
+                                                      ""),
+                                                )
+                                              }
+                                            ],
+                                          ),
+                                          trailing: GestureDetector(
+                                            onTap: () {
+                                              // Handle call action here
+                                            },
+                                            child: Container(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Text(DateTimeConverter
+                                                      .convertServerTimeToLocal(
+                                                          taskProvider
+                                                              .allTaskData[
+                                                                  index]
+                                                              .createdOn
+                                                              .toString())),
+                                                  Text(
+                                                      "Task ID - #${taskProvider.allTaskData[index].id}")
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder: (ctx, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Divider(
+                                            color: Colors.grey.shade300,
+                                            height: 10,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
                       ),
-                      Text(
-                        "Call",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (ctx, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                color: Colors.grey.shade300,
-                height: 10,
-              ),
-            );
-          },
-        )
-      :  taskProvider.searchController.text.isNotEmpty &&
-          taskProvider.searchTaskData.isEmpty? Center(child: Text("No data found."),):  ListView.separated(
-          itemCount: taskProvider.allTaskData.length,
-          itemBuilder: (ctx, index) {
-            return ListTile(
-              title: Text(taskProvider.allTaskData[index].userName ?? ""),
-              subtitle: Text(taskProvider.allTaskData[index].description ?? ""),
-              trailing: GestureDetector(
-                onTap: () {
-                  // Handle call action here
-                },
-                child: Container(
-                  width: ScreenSize.screenSize!.width * 0.14,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.call,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      Text(
-                        "Call",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (ctx, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                color: Colors.grey.shade300,
-                height: 10,
-              ),
-            );
-          },
-        ),
-),
-
           ],
         ),
       ),

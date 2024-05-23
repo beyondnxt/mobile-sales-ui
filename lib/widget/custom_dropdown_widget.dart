@@ -5,13 +5,17 @@ class CustomDropdownContainer extends StatefulWidget {
   final String lableText;
   final TextEditingController controller;
   final List<dynamic> dropDownValue;
-  const CustomDropdownContainer({
-    Key? key,
-    required this.controller,
-    required this.hintText,
-    required this.lableText,
-    required this.dropDownValue,
-  }) : super(key: key);
+  final Function(String)? onChange;
+  final String? selectedValue;
+  CustomDropdownContainer(
+      {Key? key,
+      required this.controller,
+      required this.hintText,
+      required this.lableText,
+      required this.dropDownValue,
+      required this.onChange,
+      this.selectedValue})
+      : super(key: key);
 
   @override
   _CustomDropdownContainerState createState() =>
@@ -26,7 +30,7 @@ class _CustomDropdownContainerState extends State<CustomDropdownContainer> {
   bool _isFocused = false;
   bool _isDropdownOpened = false;
 
-  List<String> _dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +41,7 @@ class _CustomDropdownContainerState extends State<CustomDropdownContainer> {
         color: Colors.grey.shade200,
       ),
       child: DropdownButtonFormField<String>(
+
         itemHeight: MediaQuery.of(context).size.height * 0.06,
         padding: EdgeInsets.all(0),
         icon: Padding(
@@ -45,12 +50,13 @@ class _CustomDropdownContainerState extends State<CustomDropdownContainer> {
           ),
           child: Icon(Icons.keyboard_arrow_down),
         ),
-        value: _selectedValue,
-        onChanged: (String? value) {
+        value: widget.selectedValue ?? _selectedValue,
+        onChanged:widget.onChange==null? null: (String? value) {
           setState(() {
             _selectedValue = value;
             print(_selectedValue);
             widget.controller.text = _selectedValue!;
+            widget.onChange!(value!);
           });
         },
         onTap: () {
@@ -83,7 +89,9 @@ class _CustomDropdownContainerState extends State<CustomDropdownContainer> {
               ? widget.lableText
               : _selectedValue != null
                   ? null
-                  : widget.hintText,
+                  : widget.controller.text.isNotEmpty
+                      ? null
+                      : widget.hintText,
           border: InputBorder.none,
           errorBorder: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(vertical: 12),
