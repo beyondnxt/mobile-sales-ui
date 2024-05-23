@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lingam/view/taskScreen/widget/create_search_dropdown.dart';
 import 'package:provider/provider.dart';
 
 import '../../../const/app_sreen_size.dart';
 import '../../../controller/task_provider.dart';
+import '../../../model/task_model.dart';
 import '../../../services/date_time_converter.dart';
 import '../../../widget/custom_dropdown_widget.dart';
 import '../../../widget/custom_elevated_button.dart';
@@ -19,6 +21,7 @@ class CreateVisitWidget extends StatefulWidget {
 
 class _CreateVisitWidgetState extends State<CreateVisitWidget> {
   String? selectdCustomer;
+   AllTaskModel? allTaskModel;
 
   @override
   void initState() {
@@ -26,16 +29,24 @@ class _CreateVisitWidgetState extends State<CreateVisitWidget> {
     super.initState();
     final provider = Provider.of<TaskProvider>(context, listen: false);
     print("1111");
-    final taskDetail = provider.findById(widget.id!);
-    selectdCustomer = taskDetail.customerId.toString();
-    provider.customerNameController.text = taskDetail.customerId.toString();
-    provider.statusTypeController.text = taskDetail.status.toString();
-    provider.descriptionNameController.text = taskDetail.description.toString();
+    if (widget.id == null) {
+    } else {
+      final taskDetail = provider.findById(widget.id!);
+      selectdCustomer = taskDetail.customerId.toString();
+      provider.customerNameController.text = taskDetail.customerId.toString();
+      provider.statusTypeController.text = taskDetail.status.toString();
+      selectdCustomer = taskDetail.customerName;
+      provider.descriptionNameController.text =
+          taskDetail.description.toString();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
+     if (widget.id != null) {
+      allTaskModel = provider.findById(widget.id!);
+    }
     return SingleChildScrollView(
       child: Container(
         width: ScreenSize.screenSize!.width,
@@ -53,18 +64,23 @@ class _CreateVisitWidgetState extends State<CreateVisitWidget> {
               SizedBox(
                 height: ScreenSize.screenSize!.height * 0.03,
               ),
-              CustomDropdownContainer(
+              SearchableDropDown(
                 controller: provider.customerNameController,
-                hintText: "Select Customer",
-                lableText: "Customer Name",
-                dropDownValue: provider.allCustomerName,
-                selectedValue: selectdCustomer,
-                onChange: widget.id == null
-                    ? (val) {
-                        print(val);
-                      }
-                    : null,
+                customerId: allTaskModel?.customerId,
+                  initialValue: allTaskModel?.customerName.toString(),
               ),
+              // CustomDropdownContainer(
+              //   controller: provider.customerNameController,
+              //   hintText: "Select Customer",
+              //   lableText: "Customer Name",
+              //   dropDownValue: provider.allCustomerName,
+              //   selectedValue: selectdCustomer,
+              //   onChange: widget.id == null
+              //       ? (val) {
+              //           print(val);
+              //         }
+              //       : null,
+              // ),
               SizedBox(
                 height: ScreenSize.screenSize!.height * 0.03,
               ),
@@ -97,7 +113,7 @@ class _CreateVisitWidgetState extends State<CreateVisitWidget> {
               SizedBox(
                 height: ScreenSize.screenSize!.height * 0.1,
               ),
-              CustomElevatedButton(
+             provider.isLoading? CircularProgressIndicator(): CustomElevatedButton(
                   onTap: () async {
                     if (provider.isLoading) {
                     } else {
@@ -129,7 +145,7 @@ class _CreateVisitWidgetState extends State<CreateVisitWidget> {
                             description:
                                 provider.descriptionNameController.text,
                             status: "Visit",
-                            feedBack: provider.feedBackController.text,
+                            feedBack: allTaskModel!.feedBack!,
                           );
                         }
                       }

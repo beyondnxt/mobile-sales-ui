@@ -16,7 +16,7 @@ class LoginProvider extends ChangeNotifier {
   bool isLoading = false;
 
   bool emailValidator(BuildContext context, String email, String password) {
-    // String email = emailtextEditingController.text.trim();
+    // String email = emailtextEditingController.textxtrim();
 
     if (RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       print("Success");
@@ -67,14 +67,15 @@ class LoginProvider extends ChangeNotifier {
         StoreLoginValue.storeLoginDetails(
           email: email,
           passworrd: password,
-          userId: jsonData["userId"].toString(),
-          userName: jsonData["userName"].toString(),
-          token: jsonData["token"].toString(),
+          userId: jsonData["data"]["userId"].toString(),
+          userName: jsonData["data"]["userName"].toString(),
+          token: jsonData["data"]["token"].toString(),
         );
         Fluttertoast.showToast(
           msg: "Login Successfully",
         );
         Navigator.of(context).pushNamed(HomeScreen.routeName);
+
       } else {
         Fluttertoast.showToast(
           msg: jsonData["message"] ?? "Something went wrong",

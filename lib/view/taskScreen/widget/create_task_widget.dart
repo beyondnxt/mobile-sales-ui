@@ -13,6 +13,7 @@ import '../../../widget/custom_date_picker_widget.dart';
 import '../../../widget/custom_dropdown_widget.dart';
 import '../../../widget/custom_elevated_button.dart';
 import '../../../widget/custom_text_field.dart';
+import '../../homeScreen.dart';
 
 class CreateTaskWidget extends StatefulWidget {
   final int? id;
@@ -36,13 +37,17 @@ class _CreateTaskWidgetState extends State<CreateTaskWidget> {
     final provider = Provider.of<TaskProvider>(context, listen: false);
     if (widget.id != null) {
       print("Page with customer id");
-      startPage(widget.id!);
+      Future.delayed(Duration(milliseconds: 500), () {
+        startPage(widget.id!);
+      });
     } else {
-        print("Page without customer id");
+      print("Page without customer id");
       provider.getAllCustomer().then((value) {
         print(widget.id.toString() + "---->>");
         if (widget.id != null) {
-          startPage(widget.id!).then((value) {});
+          Future.delayed(Duration(milliseconds: 500), () {
+            startPage(widget.id!).then((value) {});
+          });
         }
       });
     }
@@ -286,15 +291,17 @@ class _CreateTaskWidgetState extends State<CreateTaskWidget> {
                                 .statusTypeController.text.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: "Please select a Status");
-                            } else if (provider
-                                .descriptionNameController.text.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: "Please enter a description");
-                            } else if (provider
-                                .dateSelectController.text.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: "Please select an follow up date");
-                            } else {
+                            }
+                            // else if (provider
+                            //     .descriptionNameController.text.isEmpty) {
+                            //   Fluttertoast.showToast(
+                            //       msg: "Please enter a description");
+                            // } else if (provider
+                            //     .dateSelectController.text.isEmpty) {
+                            //   Fluttertoast.showToast(
+                            //       msg: "Please select an follow up date");
+                            // }
+                            else {
                               if (widget.id == null) {
                                 print(provider.statusTypeController.text +
                                     " is not available");
@@ -404,8 +411,12 @@ class _CreateTaskWidgetState extends State<CreateTaskWidget> {
                                   description:
                                       provider.descriptionNameController.text,
                                   status: status,
-                                  feedBack: provider.feedBackController.text,
-                                );
+                                  feedBack: allTaskModel!.feedBack!,
+                                ).then((value) {
+                                   Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => const HomeScreen()),
+            (route) => false);
+                                });
                               }
                             }
                           }

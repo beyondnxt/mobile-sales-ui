@@ -137,7 +137,9 @@ class AttendanceProvider with ChangeNotifier {
         "Authorization": token.toString(),
         "Content-Type": "application/json"
       };
-
+      punchInTime = "";
+      puchOutTime = "";
+      dateTime = "";
       var response = await http.get(
           Uri.parse("${APIEndPoints.mainUrl}attendance/last"),
           headers: headers);

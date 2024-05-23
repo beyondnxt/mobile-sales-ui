@@ -26,13 +26,13 @@ class _MyTaskScreenState extends State<MyTaskScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
-      _scrollController = ScrollController();
+    _scrollController = ScrollController();
 
     Future.delayed(Duration(milliseconds: 500), () {
-       final taskProvider = Provider.of<TaskProvider>(context, listen: false);
-    taskProvider.getAllTaskApi(
-        context: context, page: 1, status: taskProvider.selectedStatus);
- _scrollController.addListener(_onScroll);
+      final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+      taskProvider.getAllTaskApi(
+          context: context, page: 1, status: taskProvider.selectedStatus);
+      _scrollController.addListener(_onScroll);
     });
   }
 
@@ -56,7 +56,7 @@ class _MyTaskScreenState extends State<MyTaskScreen>
     }
   }
 
-  List<String> status = ["assigned", "unassigned", "completed"];
+  List<String> status = ["assigned", "unassigned", "completed", "Visit"];
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +114,18 @@ class _MyTaskScreenState extends State<MyTaskScreen>
                               : Colors.white,
                         ),
                         alignment: Alignment.center,
-                        child: Text(status[index].toUpperCase()),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              status[index].toUpperCase(),
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            index == 0
+                                ? Text(taskProvider.totalCount.toString())
+                                : Container()
+                          ],
+                        ),
                       ),
                     ));
               })),
@@ -153,7 +164,10 @@ class _MyTaskScreenState extends State<MyTaskScreen>
                       ),
                     )),
                 onChanged: (val) {
-                  taskProvider.searchQuery(val);
+                  if (val.isEmpty) {
+                  } else {
+                    taskProvider.searchTaskQueryApi(val, taskProvider.selectedStatus);
+                  }
                   print(taskProvider.searchController.text.isNotEmpty);
                   print(taskProvider.searchTaskData);
                 },
@@ -185,36 +199,41 @@ class _MyTaskScreenState extends State<MyTaskScreen>
                                                           .id!)));
                                     },
                                     title: Text(
-                                        "Name - ${taskProvider.searchTaskData[index].userName}"),
+                                        "Name - ${taskProvider.searchTaskData[index].customerName}"),
                                     subtitle: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        Text("Status"),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          height:
-                                              ScreenSize.screenSize!.height *
-                                                  0.035,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4, horizontal: 8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: taskProvider
-                                                  .getColorOfStatus(taskProvider
-                                                          .searchTaskData[index]
-                                                          .status ??
-                                                      "")),
-                                          child: Text(taskProvider
-                                                  .searchTaskData[index]
-                                                  .status ??
-                                              ""),
-                                        )
+                                        if (taskProvider.selectedStatus !=
+                                            "Visit") ...{
+                                          Text("Type"),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Container(
+                                            height:
+                                                ScreenSize.screenSize!.height *
+                                                    0.035,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 4, horizontal: 8),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: taskProvider
+                                                    .getColorOfStatus(
+                                                        taskProvider
+                                                                .searchTaskData[
+                                                                    index]
+                                                                .status ??
+                                                            "")),
+                                            child: Text(taskProvider
+                                                    .searchTaskData[index]
+                                                    .taskType ??
+                                                ""),
+                                          )
+                                        }
                                       ],
                                     ),
                                     trailing: GestureDetector(
@@ -263,7 +282,7 @@ class _MyTaskScreenState extends State<MyTaskScreen>
                                       await taskProvider.getAllTaskApi(
                                           context: context,
                                           page: 1,
-                                          status: "Assigned");
+                                          status: taskProvider.selectedStatus);
                                     },
                                     child: ListView.separated(
                                       controller: _scrollController,
@@ -291,41 +310,44 @@ class _MyTaskScreenState extends State<MyTaskScreen>
                                                                 .id!)));
                                           },
                                           title: Text(
-                                              "Name - ${taskProvider.allTaskData[index].userName}"),
+                                              "Name - ${taskProvider.allTaskData[index].customerName}"),
                                           subtitle: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              Text("Status"),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Container(
-                                                height: ScreenSize
-                                                        .screenSize!.height *
-                                                    0.035,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 4,
-                                                        horizontal: 8),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    color: taskProvider
-                                                        .getColorOfStatus(
-                                                            taskProvider
-                                                                    .allTaskData[
-                                                                        index]
-                                                                    .status ??
-                                                                "")),
-                                                child: Text(taskProvider
-                                                        .allTaskData[index]
-                                                        .status ??
-                                                    ""),
-                                              )
+                                              if (taskProvider.selectedStatus !=
+                                                  "Visit") ...{
+                                                Text("Type"),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Container(
+                                                  height: ScreenSize
+                                                          .screenSize!.height *
+                                                      0.035,
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 4,
+                                                      horizontal: 8),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: taskProvider
+                                                          .getColorOfStatus(
+                                                              taskProvider
+                                                                      .allTaskData[
+                                                                          index]
+                                                                      .status ??
+                                                                  "")),
+                                                  child: Text(taskProvider
+                                                          .allTaskData[index]
+                                                          .taskType ??
+                                                      ""),
+                                                )
+                                              }
                                             ],
                                           ),
                                           trailing: GestureDetector(

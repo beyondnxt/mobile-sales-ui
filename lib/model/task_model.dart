@@ -40,7 +40,7 @@ class AllTaskModel {
     customerId = json['customerId'];
     customerName = json['customerName'];
     assignTo = json['assignTo'];
-    assignToName = json['assignToName'];
+    assignToName = json['assignToName']?? "";
     description = json['description'];
     status = json['status'];
     if (json['feedBack'] != null) {
@@ -90,13 +90,16 @@ class FeedBack {
   String? feedback;
   String? createdDate;
   String? createdBy;
+  String? createdByName;
 
-  FeedBack({this.feedback, this.createdDate, this.createdBy});
+  FeedBack(
+      {this.feedback, this.createdDate, this.createdBy, this.createdByName});
 
   FeedBack.fromJson(Map<String, dynamic> json) {
     feedback = json['feedback'];
     createdDate = json['createdDate'];
     createdBy = json['createdBy'];
+    createdByName = json["createdByName"];
   }
 
   Map<String, dynamic> toJson() {
@@ -104,6 +107,7 @@ class FeedBack {
     data['feedback'] = feedback;
     data['createdDate'] = createdDate;
     data['createdBy'] = createdBy;
+    data["createdByName"] = createdByName;
     return data;
   }
 }
